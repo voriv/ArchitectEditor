@@ -5,10 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Program Test",
+            "program": "${workspaceFolder}/ArchitectEditor/Testing/check.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "pwa-node"
+        },
+        {
             "type": "pwa-chrome",
             "request": "launch",
             "name": "Launch Chrome against localhost",
-            "file": "${workspaceFolder}/ArchitectEditor/Editor/editor.html"
+            "url": "http://127.0.0.1:5500/ArchitectEditor/Editor/editor.html"
         }
     ]
 }

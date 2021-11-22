@@ -1,0 +1,40 @@
+<html>
+
+<head>
+   <link rel="stylesheet" href="../../Editor/css/editor.css" >
+   <script type="module">
+       
+
+       import { toolbox_item , toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
+       try{
+
+       let groups = [
+           new toolbox_group('Class Diagram', [
+               new toolbox_item('Class'), 
+               new toolbox_item('Interface')]
+            ),new toolbox_group('Common', [
+                new toolbox_item('Boundary')
+            ])
+        ];
+
+       let controller = new toolbox_controller( document.getElementById('toolbox'), groups);
+       } catch( exc )
+       {
+           alert(exc.message);
+       }
+
+</script>
+
+</head>
+<body >
+    <div id="canvas">
+        <svg id="target_canvas" width="100%" height="100%" >
+        </svg>
+        <div id="toolbox" onclick="alert('1111')">
+            <div id="toolboxhead">Toolbox</div>
+            <div id="toolbox_workspace"></div>
+        </div>
+        <div id="console" onclick="alert( 'console not attached')" ><p>concole</p></div>
+    </div>
+</body>
+</html> 

@@ -1,4 +1,24 @@
-var log_console;
+//import { log_console } from "./log";
+class log_console{
+    static attach( html_element )
+    {
+        this.html_element = html_element;
+        this.html_element.onclick = e=>{ alert(this.log_buffer ) }
+    }
+    static html_element;
+    static log_buffer = '';
+    static log( e )
+    {
+        if( typeof e == "string" ){
+            this.log_buffer = this.log_buffer + e + '\r\n'; 
+        } else{
+               log_console.log_buffer = log_console.log_buffer + JSON.stringify( e) + "\r\n";
+        }
+    }
+
+}
+
+//var log_console;
 const svgNS = "http://www.w3.org/2000/svg";
 
 class toolbox_element{
@@ -14,7 +34,7 @@ class toolbox_element{
         try{
             let div = document.createElement("div");
             div.className = 'toolboxitem';
-            div.innerHTML = `<p>${this.text}</p>`;
+            div.innerHTML = `<p name="class">${this.text}</p>`;
             div.onclick = (e) =>
             {
                 try{
@@ -39,7 +59,7 @@ class toolbox_element{
 
     format_svg( x, y)
     {
-        return  SVG.createSVGElement( "g" , null, `<rect x="${x}" y="${y}" fill="white" stroke="black" width="150" height="120"/>`);
+        return  SVGTool.createSVGElement( "g" , null, `<rect x="${x}" y="${y}" fill="white" stroke="black" width="150" height="120"/>`);
     }
 
     format_object( x, y, container)
@@ -53,7 +73,7 @@ class toolbox_element{
     
 }
 
-class SVG
+class SVGTool
 {
     static createSVGElement( name , attr, innerHTML )
     {
@@ -103,7 +123,7 @@ class diagram_object
     {
         this.clear_selection();
         
-        this.selection_shape = SVG.createSVGElement( "rect", {
+        this.selection_shape = SVGTool.createSVGElement( "rect", {
             x : this.x - 5, y : this.y -5, width : this.w + 10, height : this.h + 10,
             stroke : "red", "stroke-width" : 5, "fill-opacity" : 0.1
         }, "" );
@@ -129,7 +149,7 @@ class diagram_object
     {
         this.clear_selection();
         
-        this.active_shape = SVG.createSVGElement( "rect", {
+        this.active_shape = SVGTool.createSVGElement( "rect", {
             x : this.x - 5, y : this.y -5, width : this.w + 10, height : this.h + 10,
             stroke : "green", "stroke-width" : 5, "fill-opacity" : 0.1
         }, "" );
@@ -162,7 +182,7 @@ var toolbox_items = [
     new toolbox_element('Class')
 ];
 
-class canvas{
+class canvas_controller{
     constructor( canvas_svg )
     {
         this.svg_container =  canvas_svg;
@@ -258,10 +278,10 @@ class canvas{
     {
         const start_x =  start_e.offsetX;
         const start_y =  start_e.offsetY;
-        let moving_group = SVG.createSVGElement( "g", null );
+        let moving_group = SVGTool.createSVGElement( "g", null );
         this.svg_container.appendChild( moving_group );
         this.selected_objects.forEach( obj =>{
-            let moving_shape = SVG.createSVGElement( "rect", {
+            let moving_shape = SVGTool.createSVGElement( "rect", {
                 x : obj.x - 5 , y : obj.y - 5, width : obj.w +10, height : obj.h + 10,
                 stroke: "blue", "stroke-width" : 5, "fill-opacity" : 0.1
             } );
@@ -378,31 +398,19 @@ function load()
 {
     try{
        prepare_log();
-       canvas_model = new canvas( document.getElementById('target_canvas'));
+       canvas_model = new canvas_controller( document.getElementById('target_canvas'));
        canvas_div = document.getElementById("canvas");
        toolbox = document.getElementById('toolbox');
 
        toolbox_items.forEach( (item) =>{
            toolbox.appendChild( item.format_toolbox_item( canvas_model ))
        } )
-
-
-
     }catch( ex )
     {
         alert(ex.message);
     }
 
     function prepare_log() {
-        log_console = document.getElementById('console');
-        log_console.log_text = "";
-        log_console.log = (e) => { 
-            if( typeof e == "string" ){
-                 log_console.log_text = log_console.log_text + e + '\r\n'; 
-                } else{
-                    log_console.log_text = log_console.log_text + JSON.stringify( e) + "\r\n";
-                }
-            }
-        log_console.onclick = (e) => { alert(log_console.log_text); };
+        log_console.attach( document.getElementById('console') );
     }
 }

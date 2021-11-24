@@ -1,0 +1,38 @@
+<html>
+
+<head>
+   <link rel="stylesheet" href="../../Editor/css/editor.css" >
+   <script type="module">
+       
+
+       import { toolbox_item , toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
+       try{
+
+             let groups = [
+                new toolbox_group('C4 Model', [
+                    new toolbox_item('Person', '../../Editor/Image/C4model/person.png'), 
+                    new toolbox_item('System', '../../Editor/Image/c4model/system.png')]
+                    )
+                ];
+
+            let controller = new toolbox_controller( document.getElementById('toolbox'), groups);
+       } catch( exc )
+       {
+           alert(exc.message);
+       }
+
+</script>
+
+</head>
+<body >
+    <div id="canvas">
+        <svg id="target_canvas" width="100%" height="100%" >
+        </svg>
+        <div id="toolbox">
+            <div id="toolboxhead">Toolbox</div>
+            <div id="toolbox_workspace"></div>
+        </div>
+        <div id="console" onclick="alert( 'console not attached')" ><p>concole</p></div>
+    </div>
+</body>
+</html> 

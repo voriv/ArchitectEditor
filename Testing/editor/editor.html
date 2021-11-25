@@ -1,0 +1,55 @@
+<html>
+
+<head>
+   <link rel="stylesheet" href="../../Editor/css/editor.css" >
+   <script type="module">
+       
+
+       import { toolbox_item , toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
+       import { c4model } from "../../Editor/js/modules/c4model.js";
+       import { diagram_canvas } from "../../Editor/js/modules/canvas.js";
+
+       try{
+
+            let groups = c4model.toolbox_groups;
+
+            let tb_controller = new toolbox_controller( document.getElementById('toolbox'), groups);
+            let svg_element = document.getElementById('diagram_canvas')
+            let canvas = new diagram_canvas( document.getElementById('diagram_canvas'));
+            svg_element.onmouseup = (e)=>{
+                if(tb_controller.selected_item ){
+                }
+                tb_controller.cancel_selection();
+            }
+
+            tb_controller.on_item_click = (ti) =>{
+                if( svg_element ){
+                    svg_element.style.cursor = toolbox_controller.add_element_cursor;
+                }
+            }
+            tb_controller.on_cancel_selection = (ti) =>{
+                if( svg_element ){
+                    svg_element.style.cursor = "";
+                }
+            }
+  
+       } catch( exc )
+       {
+           alert(exc.message);
+       }
+
+</script>
+
+</head>
+<body >
+    <div id="canvas">
+        <svg id="diagram_canvas" width="100%" height="100%" >
+        </svg>
+        <div id="toolbox">
+            <div id="toolboxhead">Toolbox</div>
+            <div id="toolbox_workspace"></div>
+        </div>
+        <div id="console" onclick="alert( 'console not attached')" ><p>concole</p></div>
+    </div>
+</body>
+</html> 

@@ -4,6 +4,7 @@ export class toolbox_controller
     collapsed_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB4SURBVChTpY/BCcAgDEW7/yqOoOAAestVN9ARiv2QtFSIou07BH94yM/RdhD7XOC37b3POUvoUWxjTAjBOVdrldWNbmOWUqy1MUZeMkObISIUkzC30R7f85sZ2uiA9rx50G2cmFKS/EKxURQnSuhR7Alf7UV27NYupQqNj0vAphMAAAAASUVORK5CYII="
     div;
     on_item_click;
+    on_cancel_selection;
     create_item_div( item)
     {
         let item_div = document.createElement('div');
@@ -17,13 +18,14 @@ export class toolbox_controller
         item_div.onmouseover = (e) => { item_div.style.backgroundColor  = 'lightgray'; }
         item_div.onmouseout = (e) => { item_div.style.backgroundColor  = 'white'; }
         item_div.onmousedown = (e) => {
-            if( this.on_item_click )
-            {
-                this.on_item_click( item );
-            }
+            this.select_item( item );
+        }
+        item_div.onmouseup = (e) =>{
+            this.cancel_selection();
         }
         return item_div;
     }
+    group_name_div_list = [];
     create_item_group_div( group )
     {
         let group_div = document.createElement("div");
@@ -33,6 +35,7 @@ export class toolbox_controller
         let name_div = document.createElement('div');
         name_div.style.width = "auto";
         name_div.style.cursor = "pointer";
+        this.group_name_div_list.push( name_div );
 
         //name_div.className = "toolbox_group_name";
         name_div.innerHTML = `<img style="vertical-align: middle;display: inline-block;" src=\"${this.expanded_img}"><div style="display: inline-block;">${group.name}</div>`;
@@ -71,6 +74,45 @@ export class toolbox_controller
         for( const g of groups)
         {
             div.appendChild(this.create_item_group_div( g ));
+        }
+    }
+    selected_item;
+    static add_element_cursor = "url(data:application/cur;base64,AAACAAEAICAAAAAAAAAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAH/AAAB7wAAAe8AAAHvAAABAQAAAe8AADHvAAAx7wAAYf8AAGAAAADAAAAQwAAAGYAAAB2AAAAfgAAAH/AAAB/gAAAfwAAAH4AAAB8AAAAeAAABXUAAApqAAAFVQAACioAAAVVAAAP/4AAAAAAAAAAAAA/////////////8AH///AB///wAf//8AH///AB///wAf//EAH//hAB//4QAf/8MAH/fDAB/zh///8Yf///AP///wD///8AD///AB///wA///8Af///AP//4AA//+AAP//gAD//4AA//+AAP//gAD//4AA//+AAP//gAD///////8=), auto";
+
+    select_item( item )
+    {
+
+        try{
+            this.selected_item = item;
+            this.div.style.cursor = toolbox_controller.add_element_cursor;
+            this.group_name_div_list.forEach( (d)=>{
+                d.style.cursor = toolbox_controller.add_element_cursor
+            });
+            if( this.on_item_click )
+            {
+                this.on_item_click( item );
+            }
+        }catch(err )
+        {
+            alert( err.message);
+        }
+    }
+    cancel_selection()
+    {
+
+        try{
+    
+            this.div.style.cursor = "default";
+            this.group_name_div_list.forEach( (d)=>{
+                d.style.cursor = "pointer";             
+            });
+            if( this.on_cancel_selection){
+                this.on_cancel_selection();
+            }
+            this.selected_item = null;
+        }catch( errr )
+        {
+            alert( errr.message );
         }
     }
 }

@@ -7,8 +7,15 @@ export class object_type
     }
     name;
     shape_script;
+    icon;
 }
 
 export class diagram_object
 {
+    type;
+    name;
+    constructor( type, name ){
+        this.type = type;
+        this.name = name;
+    }
 }

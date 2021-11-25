@@ -6,14 +6,11 @@
        
 
        import { toolbox_item , toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
+       import { c4model } from "../../Editor/js/modules/c4model.js";
+
        try{
 
-             let groups = [
-                new toolbox_group('C4 Model', [
-                    new toolbox_item('Person', '../../Editor/Image/C4model/person.png'), 
-                    new toolbox_item('System', '../../Editor/Image/c4model/system.png')]
-                    )
-                ];
+            let groups = c4model.toolbox_groups;
 
             let controller = new toolbox_controller( document.getElementById('toolbox'), groups);
        } catch( exc )

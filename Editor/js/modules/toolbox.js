@@ -3,26 +3,32 @@ export class toolbox_controller
     expanded_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAwAAAALCAIAAADEEvsIAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAA6SURBVChTY/hLCPz//5/WilavXg1l4VIEVEFAEUQFEED5mIqg8mAAFUJTBJWEAagoHocjAyoq+v8fAFKQeUTkz0ABAAAAAElFTkSuQmCC"
     collapsed_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA8AAAAPCAIAAAC0tAIdAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAB4SURBVChTpY/BCcAgDEW7/yqOoOAAestVN9ARiv2QtFSIou07BH94yM/RdhD7XOC37b3POUvoUWxjTAjBOVdrldWNbmOWUqy1MUZeMkObISIUkzC30R7f85sZ2uiA9rx50G2cmFKS/EKxURQnSuhR7Alf7UV27NYupQqNj0vAphMAAAAASUVORK5CYII="
     div;
-    on_item_click;
-    on_cancel_selection;
-    create_item_div( item)
+    on_item_click( item )
+    {
+
+    };
+    on_cancel_selection( item ){
+
+    }
+    create_item_div( item )
     {
         let item_div = document.createElement('div');
         item_div.style.width = "auto"
         item_div.style.cursor = "";
        
-        item_div.innerHTML = `<div style="display: inline-block; width: 20;"></div><img style="vertical-align: middle;" src="${item.image}"><div style="display:  inline-block;">${item.name}</div>`;
+        item_div.innerHTML = `<div style="display: inline-block; width: 20;"></div><img style="vertical-align: middle;" src="${item.icon}"><div style="display:  inline-block;">${item.name}</div>`;
         //name_div.className = "toolbox_item";
 
         //add selection behavior
         item_div.onmouseover = (e) => { item_div.style.backgroundColor  = 'lightgray'; }
         item_div.onmouseout = (e) => { item_div.style.backgroundColor  = 'white'; }
         item_div.onmousedown = (e) => {
-            this.select_item( item );
+            this.on_item_click( item );
         }
         item_div.onmouseup = (e) =>{
-            this.cancel_selection();
+            this.on_cancel_selection();
         }
+
         return item_div;
     }
     group_name_div_list = [];
@@ -71,45 +77,36 @@ export class toolbox_controller
         this.div = div;
         div.style.cursor = "default";
         div.style.userSelect = "none";
+        div.onmouseup = (e) => { this.on_cancel_selection();}
         for( const g of groups)
         {
             div.appendChild(this.create_item_group_div( g ));
         }
     }
     selected_item;
-    static add_element_cursor = "url(data:application/cur;base64,AAACAAEAICAAAAAAAAAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAH/AAAB7wAAAe8AAAHvAAABAQAAAe8AADHvAAAx7wAAYf8AAGAAAADAAAAQwAAAGYAAAB2AAAAfgAAAH/AAAB/gAAAfwAAAH4AAAB8AAAAeAAABXUAAApqAAAFVQAACioAAAVVAAAP/4AAAAAAAAAAAAA/////////////8AH///AB///wAf//8AH///AB///wAf//EAH//hAB//4QAf/8MAH/fDAB/zh///8Yf///AP///wD///8AD///AB///wA///8Af///AP//4AA//+AAP//gAD//4AA//+AAP//gAD//4AA//+AAP//gAD///////8=), auto";
-
-    select_item( item )
+ 
+    set_cursor( cursor )
     {
-
+        
         try{
-            this.selected_item = item;
-            this.div.style.cursor = toolbox_controller.add_element_cursor;
+            this.div.style.cursor = cursor;
             this.group_name_div_list.forEach( (d)=>{
-                d.style.cursor = toolbox_controller.add_element_cursor
+                d.style.cursor = cursor;
             });
-            if( this.on_item_click )
-            {
-                this.on_item_click( item );
-            }
+
         }catch(err )
         {
             alert( err.message);
         }
     }
-    cancel_selection()
+    restore_cursor()
     {
-
         try{
     
             this.div.style.cursor = "default";
             this.group_name_div_list.forEach( (d)=>{
                 d.style.cursor = "pointer";             
             });
-            if( this.on_cancel_selection){
-                this.on_cancel_selection();
-            }
-            this.selected_item = null;
         }catch( errr )
         {
             alert( errr.message );
@@ -130,6 +127,7 @@ export class toolbox_group
     }
 }
 
+/*
 export class toolbox_item{
     name;
     image;
@@ -139,3 +137,4 @@ export class toolbox_item{
         this.image= image;
     }
 }
+*/

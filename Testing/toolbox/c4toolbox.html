@@ -3,20 +3,22 @@
 <head>
    <link rel="stylesheet" href="../../Editor/css/editor.css" >
    <script type="module">
-       
-
-       import { toolbox_item , toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
+       import { toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
        import { c4model } from "../../Editor/js/modules/c4model.js";
 
-       try{
+       try{  
 
             let groups = c4model.toolbox_groups;
+            //alert( 'asd');
 
             let controller = new toolbox_controller( document.getElementById('toolbox'), groups);
        } catch( exc )
        {
            alert(exc.message);
        }
+       //*/
+
+
 
 </script>
 

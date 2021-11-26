@@ -8,5 +8,5 @@ function base64_encode(file) {
     return new Buffer(bitmap).toString('base64');
 }
 
-const base64 = base64_encode("C:/GIT/Github/ArchitectEditor/Editor/cursor/add_element.cur");
+const base64 = base64_encode("C:/GIT/Github/ArchitectEditor/Editor/image/svg/rect.png");
 console.log( base64);

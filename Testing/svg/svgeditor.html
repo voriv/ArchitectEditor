@@ -1,0 +1,146 @@
+<html>
+
+<head>
+    <link rel="stylesheet" href="../../Editor/css/editor.css">
+    <script type="module">
+
+
+        import { toolbox_group, toolbox_controller } from "../../Editor/js/modules/toolbox.js";
+        import { svg_model } from "../../Editor/js/modules/svgmodel.js";
+        import { diagram_canvas } from "../../Editor/js/modules/canvas.js";
+        import { object_type, diagram_object, model, diagram } from "../../Editor/js/modules/metamodel.js";
+
+        class diagram_controller {
+
+            static add_element_cursor = "url(data:application/cur;base64,AAACAAEAICAAAAAAAAAwAQAAFgAAACgAAAAgAAAAQAAAAAEAAQAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA////AAAAAAAAAAAAAAAAAAAAH/AAAB7wAAAe8AAAHvAAABAQAAAe8AADHvAAAx7wAAYf8AAGAAAADAAAAQwAAAGYAAAB2AAAAfgAAAH/AAAB/gAAAfwAAAH4AAAB8AAAAeAAABXUAAApqAAAFVQAACioAAAVVAAAP/4AAAAAAAAAAAAA/////////////8AH///AB///wAf//8AH///AB///wAf//EAH//hAB//4QAf/8MAH/fDAB/zh///8Yf///AP///wD///8AD///AB///wA///8Af///AP//4AA//+AAP//gAD//4AA//+AAP//gAD//4AA//+AAP//gAD///////8=), auto";
+
+            type_for_add;
+            views = [];
+            diagram;
+
+            constructor(dg, tb, canvas, views) {
+                this.tb = tb;
+                this.diagram = dg;
+                this.canvas = canvas;
+                if (views){
+                    this.views = views;
+                }
+
+                this.views.push( canvas );
+                
+
+                this.tb.on_item_click = (item) => { this.start_add_object(item) };
+                this.tb.on_cancel_selection = (item) => { this.cancel_add_object(item) };
+                //this.tb.on
+            }
+            start_add_object(type) {
+                try {
+                    this.type_for_add = type;
+                    this.tb.set_cursor(diagram_controller.add_element_cursor);
+                    if (this.canvas) {
+                        this.canvas.set_cursor(diagram_controller.add_element_cursor);
+                        this.canvas.on_mouseup = (x, y) => { this.add_object(x, y); }
+                    }
+                    //alert('1')             
+                } catch (error) {
+                    alert(error.message)
+                }
+            }
+            cancel_add_object() {
+                try {
+                    this.tb.restore_cursor();
+                    if (this.canvas) {
+                        this.canvas.set_cursor(null);
+                    }
+                    this.canvas.on_mouseup = (x, y) => { };
+                } catch (error) {
+                    alert(error.message)
+                }
+            }
+
+            add_object(x, y) {
+                try {
+                    let new_object = this.diagram.create_object(this.type_for_add, null, x,y);
+                    if (this.views) {
+                        this.views.forEach((v) => {
+                            if( v.create_element ){
+                                v.create_element(new_object.element);
+                            }
+                            if( v.create_diagram_object ){
+                                v.create_diagram_object( new_object )
+                            }
+                        });
+                    }
+                    this.cancel_add_object();
+                } catch (error) {
+                    alert(error.message + error.stack);
+                }
+            }
+        }
+
+        class svg_source_view {
+            diagram;
+            constructor(div, dg) {
+                this.div = div;
+                this.diagram = dg;
+                div.style.wordWrap = "break-word";
+            }
+            create_diagram_object(obj ) {
+                let html = "Элементы:";
+                obj.diagram.objects.forEach( (o )=>{
+         
+                    html += `\r\n<${o.element.name} x="${o.x} y="${o.y}" height="${o.h}"`;
+                    if( obj.element.svg_attributes )
+                    {
+                        for( const aname in obj.element.svg_attributes ){
+                            html += ` ${aname}="${obj.element.svg_attributes[aname]}"`;
+                        }
+                    }
+                    html += "/>";
+                })
+                this.div.innerText = html;
+            }
+        }
+
+        try {
+
+            let groups = svg_model.toolbox_groups;
+
+            let tb_controller = new toolbox_controller(document.getElementById('toolbox'), groups);
+
+
+            let svg_element = document.getElementById('diagram_canvas');
+            let local_model = new model();
+            let dg = local_model.create_diagram("SVG");
+            //svg_element
+            let canvas = new diagram_canvas(svg_element, dg);
+            let controller = new diagram_controller(
+                dg,
+                tb_controller,
+                canvas,
+                [
+                    new svg_source_view(document.getElementById("propbox"))]);
+        } catch (exc) {
+            alert(exc.message);
+        }
+
+    </script>
+
+</head>
+
+<body>
+    <div id="canvas">
+        <svg id="diagram_canvas" width="100%" height="100%">
+        </svg>
+        <div id="toolbox">
+            <div id="toolboxhead">Toolbox</div>
+            <div id="toolbox_workspace"></div>
+        </div>
+        <div id="propbox"></div>
+        <div id="console" onclick="alert( 'console not attached')">
+            <p>concole</p>
+        </div>
+    </div>
+</body>
+
+</html>

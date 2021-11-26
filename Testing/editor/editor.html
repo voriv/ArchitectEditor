@@ -5,9 +5,10 @@
    <script type="module">
        
 
-       import { toolbox_item , toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
+       import { toolbox_group, toolbox_controller  } from "../../Editor/js/modules/toolbox.js";
        import { c4model } from "../../Editor/js/modules/c4model.js";
        import { diagram_canvas } from "../../Editor/js/modules/canvas.js";
+       import { object_type, diagram_object  } from "../../Editor/js/modules/metamodel.js";
 
        try{
 
@@ -17,9 +18,17 @@
             let svg_element = document.getElementById('diagram_canvas')
             let canvas = new diagram_canvas( document.getElementById('diagram_canvas'));
             svg_element.onmouseup = (e)=>{
-                if(tb_controller.selected_item ){
+ 
+                try {
+                    if(tb_controller.selected_item ){
+                    let obj = new diagram_object( tb_controller.selected_item, 'Person1', { x: e.offsetX, y : e.offsetY });
+                    canvas.draw(obj);
                 }
                 tb_controller.cancel_selection();
+                } catch (error) {
+                    alert( error.message + error.stack)
+                }
+
             }
 
             tb_controller.on_item_click = (ti) =>{

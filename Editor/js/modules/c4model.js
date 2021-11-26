@@ -1,4 +1,26 @@
-import { toolbox_item , toolbox_group, toolbox_controller  } from "./toolbox.js";
+import { toolbox_group, toolbox_controller  } from "./toolbox.js";
+import { object_type  } from "./metamodel.js";
+import { SVG  } from "./svg.js";
+
+
+export class c4_object_types
+{
+    static person_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAYCAYAAAAPtVbGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAACnSURBVEhL3ZXBDYAgDEWRlVzAqxN7dQFXQm2oCdQiDa2S+C5Wo/35/aQO+4lTEkLAKuK9xyqS3zVCm1JMRGqoRGBMdFQc4kymecMqsi4jVpFUrCkTKgDQZ9C4lE3VCSeQQh1xPDqpCQCSd1TBS+kvIpm3OhMr2NMlCZOj5OrmpFUAKH2biWgELrgeXrp/NPQ/wlacO6282Kww+f3W+FEmeH2VD0ScOwAFcT0iAi6fVgAAAABJRU5ErkJggg==";
+
+    static person_shape_script( obj )
+    {
+        return SVG.group( {transform : `translate(${obj.x},${obj.y})`  },
+            [ 
+                SVG.rect({x: 0, y : 0, width : "150", height : "150", stroke : "black", "stroke-width": "1", fill : "white" }),
+                SVG.rect({x: 0, y : 60, width : "150", height : "90", stroke : "darkblue", "stroke-width": "1", fill : "blue", rx : 20 }),
+                SVG.circle({cx: 75, cy : 35, r : 35,stroke : "black", "stroke-width": "1", fill : "blue", rx : 20 })
+            ]
+         )
+    }
+
+    static person = new object_type('Person', c4_object_types.person_img, c4_object_types.person_shape_script);
+}
+
 
 export class c4model{
     static person_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAYCAYAAAAPtVbGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAACnSURBVEhL3ZXBDYAgDEWRlVzAqxN7dQFXQm2oCdQiDa2S+C5Wo/35/aQO+4lTEkLAKuK9xyqS3zVCm1JMRGqoRGBMdFQc4kymecMqsi4jVpFUrCkTKgDQZ9C4lE3VCSeQQh1xPDqpCQCSd1TBS+kvIpm3OhMr2NMlCZOj5OrmpFUAKH2biWgELrgeXrp/NPQ/wlacO6282Kww+f3W+FEmeH2VD0ScOwAFcT0iAi6fVgAAAABJRU5ErkJggg==";
@@ -7,19 +29,11 @@ export class c4model{
     static boundary_img = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAYCAYAAAAPtVbGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABXSURBVEhLY/wPBAw0BkxQmqYAwxJGRkYwhgFK+SCAElwgSWqFHrJZdAmuYRrx6BFGCUA2azROSAKjcUISGI0TksDARDzMmzBhSvkgMExTF63AcLGEgQEANN4xPu7ofY8AAAAASUVORK5CYII=";
 
 
-    static toolbox_groups = [
+    static toolbox_groups =  [
         new toolbox_group('C4 Model Entity', [
-                new toolbox_item('Person', this.person_img), 
-                new toolbox_item('System', this.system_img),
-                new toolbox_item('Container', this.container_img)
+            c4_object_types.person
             ]
-        ),
-        new toolbox_group('C4 Model Boundary', [
-            new toolbox_item('System Boundary', this.boundary_img)
-        ] ),
-        new toolbox_group('C4 Model Relationships', [
-            
-        ] )
+        )
     ];
 }
 

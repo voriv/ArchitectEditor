@@ -27,12 +27,25 @@
                 }
 
                 this.views.push( canvas );
-                
 
                 this.tb.on_item_click = (item) => { this.start_add_object(item) };
                 this.tb.on_cancel_selection = (item) => { this.cancel_add_object(item) };
-                //this.tb.on
+                this.canvas.object_selected = (obj) =>{ 
+                    this.on_select_object( obj );
+                 }
             }
+
+            on_select_object( obj ){
+                if( this.views ){
+                    this.views.forEach( (v) => {
+                        if( v.on_select_object ){
+                           // alert( v.select_object );
+                            v.on_select_object( obj );
+                        }
+                    });
+                }
+            }
+
             start_add_object(type) {
                 try {
                     this.type_for_add = type;
@@ -86,19 +99,36 @@
                 div.style.wordWrap = "break-word";
             }
             create_diagram_object(obj ) {
+                this.draw();
+            }
+
+            draw(){
                 let html = "Элементы:";
-                obj.diagram.objects.forEach( (o )=>{
+                this.diagram.objects.forEach( (o )=>{
          
                     html += `\r\n<${o.element.name} x="${o.x} y="${o.y}" height="${o.h}"`;
-                    if( obj.element.svg_attributes )
+                    if( o.element.svg_attributes )
                     {
-                        for( const aname in obj.element.svg_attributes ){
-                            html += ` ${aname}="${obj.element.svg_attributes[aname]}"`;
+                        for( const aname in o.element.svg_attributes ){
+                            html += ` ${aname}="${o.element.svg_attributes[aname]}"`;
                         }
                     }
                     html += "/>";
                 })
+
+                if( this.selected_object ){
+                   html +=  `\r\n${this.selected_object.element.name}\r\n x="${this.selected_object.x} y="${this.selected_object.y}" height="${this.selected_object.h}"`;
+                    html += "\r\n" + JSON.stringify( this.selected_object.element.svg_attributes );
+                }
                 this.div.innerText = html;
+            }
+
+            selected_object;
+
+            on_select_object( obj )
+            {
+                this.selected_object = obj;
+                this.draw();
             }
         }
 
@@ -119,7 +149,8 @@
                 tb_controller,
                 canvas,
                 [
-                    new svg_source_view(document.getElementById("propbox"))]);
+                    new svg_source_view(document.getElementById("propbox"), dg)
+                ]);
         } catch (exc) {
             alert(exc.message);
         }

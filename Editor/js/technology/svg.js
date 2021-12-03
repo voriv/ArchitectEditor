@@ -1,10 +1,12 @@
-import { toolbox_group, toolbox_controller  } from "./toolbox.js";
-import { object_type  } from "./metamodel.js";
-import { SVG  } from "./svg.js";
 
 
-export class svg_object_type
+import { object_type , model_techology } from "../model/editormodel.js";
+import { SVG  } from "../tools/svg.js";
+
+
+export class svg_object_types
 {
+    
     static rect_icon = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAYCAYAAAAPtVbGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAABKSURBVEhL7dUxDgAQEETRHfe/MwqSFdWEnWpeg8YPCuhTFGtrLHWcBMCa/bG3viJp+STvJbkuRyiOUByhOEKRRPT/SRU/PEUQiRimUiAYHjxmGgAAAABJRU5ErkJggg==";
 
     static rect_shape( obj )
@@ -23,22 +25,22 @@ export class svg_object_type
          );
     }
 
+    
+
     static set_default_rect( e ){
         e.svg_attributes = { stroke : "black", "stroke-width": "1", fill : "white" };
     }
 
-    static rect = new object_type('rect', svg_object_type.rect_icon, svg_object_type.rect_shape, svg_object_type.set_default_rect);
-}
+    static rect = new object_type('rect', svg_object_types.rect_icon, svg_object_types.rect_shape, svg_object_types.set_default_rect);
 
+    static types = [svg_object_types.rect];
+
+}
 
 export class svg_model{
-
-    static toolbox_groups =  [
-        new toolbox_group('SVG Figures', [
-            svg_object_type.rect
-            ]
-        )
-    ];
+    static technology = new model_techology("SVG Element", svg_object_types.types);
 }
+
+
 
 

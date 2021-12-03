@@ -1,0 +1,33 @@
+<html>
+
+<head>
+
+    <script type="module">
+        import { editor_model } from "../model/editormodel.js";
+        import { svg_model } from "../technology/svg.js";
+        
+        import { toolbox_controller } from "./toolbox_controller.js";   
+        try {
+            
+
+            let model = new editor_model(
+                [svg_model.technology]
+            );
+             //alert( JSON.stringify( svg_object_types.types) ) 
+            let controller = new toolbox_controller(model, document.getElementById( 'canvas'));
+            //document.getElementById( 'canvas').appendChild( )
+
+        } catch (error) {
+            alert(`${ error.message}\r\n${error.stack}`  );
+        }
+
+
+    </script>
+</head>
+
+<body>
+    <div id="canvas">
+    </div>
+</body>
+
+</html>

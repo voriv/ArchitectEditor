@@ -104,7 +104,9 @@ export class toolbox_view {
                 float: "left",
                 position: "absolute",
                 boxShadow: "0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22)",
-                cursor: "default"
+                cursor: "default",
+                backgroundColor: "white",
+                userSelect : "none"
             }
             , [this.header(),
             ...this.model.technologies.map(t => this.group(t))]);

@@ -27,8 +27,11 @@ export class editor_controller{
             },
             onselectobject: e=>{
                 this.focus_object(e);
-            }
-        });
+            },
+            onobjectmoved : (o,dx,dy )=>{
+                o.set_position( o.x + dx, o.y + dy);
+                this.canvas_view.redraw();
+            }});
 
         this.prop_view = new property_view( model );
 

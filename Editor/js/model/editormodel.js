@@ -50,6 +50,10 @@ export class digram_object{
     formatSVG(){
         return this.element.type.shape_script( this );
     }
+    set_position(x,y){
+        this.x = x;
+        this.y = y;
+    }
 }
 export class diagram{
     name;

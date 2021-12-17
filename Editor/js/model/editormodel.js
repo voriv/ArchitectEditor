@@ -97,6 +97,10 @@ export class editor_model{
     technologies;
     elements = [];
     diagrams = [];
+    selected_elements = [];
+    focus;
+
+
     constructor( technologies ){
         this.technologies = technologies;
     }
@@ -118,6 +122,7 @@ export class editor_model{
         return e;
         throw Error('not implemented');
     }
+
     //events
     event_handlers = {
     };

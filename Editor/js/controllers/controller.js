@@ -40,7 +40,8 @@ export class editor_controller{
 
     focus_object( obj ){
         try{
-        this.canvas_view.select_object( obj );
+        //this.canvas_view.select_object( obj );
+
         this.prop_view.show_object(obj );
         }catch( error){
             alert( error.message );

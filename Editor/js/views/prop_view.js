@@ -29,24 +29,25 @@ export class property_view {
         }
         this.table = this.format_content();
         this.div.appendChild(this.table);
-
     }
 
     format_content() {
-        return HTML.table({ border: 1, width: "100%", cellspacing: 1, cellpadding: 1 },
+        const rows = [];
+        rows.push( HTML.tr(
+            [HTML.td("Name"), HTML.td(`${this.object.element.name}`)]
+        ));
+
+        for( const key of ["x", "y", "w", "h"]){
+            rows.push( HTML.tr(
+                [HTML.td( key ), HTML.td( `${this.object[key]}`)]
+            ));
+        }
+        return HTML.table({ border: 1, width: "100%" },
             HTML.colgroup(
                 [HTML.col(null, " 30%")]),
             HTML.tbody(
-                [
-                    HTML.tr(
-                        [HTML.td("Name"), HTML.td(`${this.object.element.name}`)]
-                    ), HTML.tr(
-                        [HTML.td("x"), HTML.td(`${this.object.x}`)]
-                    ),
-                    HTML.tr(
-                        [HTML.td("y"), HTML.td(`${this.object.y}`)]
-                    )]
-            )
+                rows
+            ), { borderCollapse: "collapse"}
         );
     }
 

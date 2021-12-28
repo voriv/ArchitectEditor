@@ -54,6 +54,12 @@ export class digram_object{
         this.x = x;
         this.y = y;
     }
+    set_layout( x,y, w, h){
+        this.x = x;
+        this.y = y;
+        this.h = h;
+        this.w = w;
+    }
 }
 export class diagram{
     name;

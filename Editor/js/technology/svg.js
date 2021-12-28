@@ -25,15 +25,31 @@ export class svg_object_types
          );
     }
 
-    
+    static ellipse_shape( obj )
+    {
+        if( !obj.w )
+        {
+            obj.w =  100;
+        }
+        
+        if( !obj.h ){ obj.h = 100;}
+
+        return SVG.group( {transform : `translate(${obj.x},${obj.y})`  },
+            [ 
+                SVG.ellipse({cx: obj.w/2, cy : obj.h/2, rx: obj.w /2, ry : obj.h/2
+                    , stroke : "black", "stroke-width": "1", fill : "white"}),
+            ]
+         );
+    }
 
     static set_default_rect( e ){
         e.svg_attributes = { stroke : "black", "stroke-width": "1", fill : "white" };
     }
 
     static rect = new object_type('rect', svg_object_types.rect_icon, svg_object_types.rect_shape, svg_object_types.set_default_rect);
+    static ellipse = new object_type('ellipse', svg_object_types.rect_icon, svg_object_types.ellipse_shape, svg_object_types.set_default_rect);
 
-    static types = [svg_object_types.rect];
+    static types = [svg_object_types.rect, svg_object_types.ellipse];
 
 }
 

@@ -30,6 +30,9 @@ export class SVG {
     static circle( attributes ){
         return this.element( "circle", attributes);
     }
+    static ellipse( attributes ){
+        return this.element( "ellipse", attributes);
+    }
     static rect( attributes ){
         return this.element("rect", attributes);
     }

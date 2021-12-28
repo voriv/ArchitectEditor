@@ -30,6 +30,16 @@ export class HTML{
         return this.element( "img",  Object.assign( {src : src, attr} ), null, css);
     }
 
+    static button(name, onclick){
+        let ret =  this.element( "button", {}, name);
+        ret.onclick = onclick;
+        return ret;
+    }
+
+    static input(value, onclick){
+        return this.element( "input", { value: value});
+    }
+
     static col( name, width){
         return this.element("col", null, null, { width : width });
     }
@@ -49,7 +59,8 @@ export class HTML{
         return this.element( "tr", null, cells );
     }
 
-    static table( attr, columns, tbody ){
-        return this.element("table",attr, [columns, tbody] );
+    static table( attr, columns, tbody, css ){
+        return this.element("table",attr, [columns, tbody], css );
     }
+
 }

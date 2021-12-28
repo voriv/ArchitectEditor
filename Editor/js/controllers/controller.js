@@ -1,6 +1,7 @@
 import { toolbox_view } from "../views/toolbox_view.js";
 import { canvas_view } from "../views/canvas_view.js";
 import { property_view } from "../views/prop_view.js";
+import { scale_view } from "../views/scale_view.js";
 
 
 export class editor_controller{
@@ -11,6 +12,7 @@ export class editor_controller{
     toolbox_view;
     canvas_view;
     prop_view;
+    scale_view;
 
     constructor( model, parent ){
         this.model = model;
@@ -28,21 +30,28 @@ export class editor_controller{
             onselectobject: e=>{
                 this.focus_object(e);
             },
+            object_layout_changed : ( obj, x,y,w,h)=>{
+                obj.set_layout( x,y,w,h);
+                this.canvas_view.redraw();
+            },
             onobjectmoved : (o,dx,dy )=>{
                 o.set_position( o.x + dx, o.y + dy);
                 this.canvas_view.redraw();
             }});
 
         this.prop_view = new property_view( model );
+        this.scale_view = new scale_view();
+        this.scale_view.add_scale_changed_handler( scale=>{ 
+            this.canvas_view.set_scale( scale);
+            //alert(`new scale = ${scale}`)
+        })
 
         this.attach( parent );
     }
 
     focus_object( obj ){
         try{
-        //this.canvas_view.select_object( obj );
-
-        this.prop_view.show_object(obj );
+            this.prop_view.show_object(obj );
         }catch( error){
             alert( error.message );
         }
@@ -56,6 +65,9 @@ export class editor_controller{
             parent.appendChild( this.canvas_view.svg );
          }
          parent.appendChild( this.prop_view.div );
+         if( this.scale_view ){
+             parent.appendChild( this.scale_view.div);
+         }
      }
 
     selected_type;

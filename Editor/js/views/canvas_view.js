@@ -7,8 +7,10 @@ class selection_shape {
     static focus_corner_attributes = { stroke: "black", "stroke-width": "1", "fill": "white" };
 
     static left_top(obj, attr, mousedown, scale) {
-        return SVG.rect(
-            Object.assign({ x: obj.x - 10, y: obj.y - 10, width: 10, height: 10, onmousedown: mousedown }, attr));
+        let ret = SVG.rect(
+            Object.assign({ x: obj.x - 10, y: obj.y - 10, width: 10, height: 10 }, attr));
+            ret.onmousedown = mousedown;
+            return ret;
     }
     static right_top(obj, attr, mousedown) {
         return SVG.rect(
@@ -67,7 +69,7 @@ class selection_shape {
         return { x: obj.x, y: obj.y, w: obj.w + dx, h: obj.h };
     }
 
-    static frame(obj, attr, mousedown) {
+    static frame(obj, attr, mousedown, changesize_handlers) {
         let rect = SVG.rect({
             x: obj.x - 5, y: obj.y - 5, width: obj.w + 10, height: obj.h + 10,
             stroke: "black", "stroke-width": "1", "fill-opacity": 0.1
@@ -79,9 +81,13 @@ class selection_shape {
             }
         }
 
+        if( !changesize_handlers ){
+            changesize_handlers = {};
+        }
+
         let ret = SVG.group({}, [
             rect,
-            this.left_top(obj, attr),
+            this.left_top(obj, attr, changesize_handlers.left_top),
             this.top_center(obj, attr),
             this.right_top(obj, attr),
             this.right_center(obj, attr),
@@ -95,9 +101,6 @@ class selection_shape {
 
     static moving_style = { stroke: "black", "stroke-width": "1", "fill-opacity": 0.1, fill: "black" };
     static moving_frame(objs) {
-
-
-
         return SVG.group({},
             objs.map(
                 o => SVG.rect(
@@ -122,7 +125,6 @@ class selection_state {
         this.mousedown_handler = mousedown;
     }
     change_scale(scale) {
-
     }
 
     redraw() {
@@ -131,7 +133,7 @@ class selection_state {
             this.focus.frame = selection_shape.frame(this.focus.o, selection_shape.focus_corner_attributes,
                 e => {
                     this.mousedown(e);
-                }
+                }, this.change_size_handlers
             );
             this.svg.appendChild(this.focus.frame);
         }
@@ -173,12 +175,17 @@ class selection_state {
         this.add_focus(obj);
 
     }
+    change_size_handlers = {
+        left_top : e=>{
+            alert('left top');
+        }
+    }
     add_focus(obj) {
         this.focus = {
             o: obj, frame: selection_shape.frame(obj, selection_shape.focus_corner_attributes,
                 e => {
                     this.mousedown(e);
-                })
+                }, this.change_size_handlers)
         };
         this.svg.appendChild(this.focus.frame);
     }
@@ -364,13 +371,6 @@ export class canvas_view {
 
     clear_selection() {
         this.selection.clear();
-        /*
-        this.selection_shapes.forEach(s => {
-            this.svg.removeChild(s);
-        });
-
-        this.selection_shapes = [];
-        */
     }
 
     start_x;
@@ -427,16 +427,6 @@ export class canvas_view {
     }
     select_object(obj) {
         this.selection.select(obj);
-        /*
-                this.clear_selection();
-        
-                this.selected_objects = [obj];
-                let ss = this.selectionSVG(obj);
-         
-                this.selection_shapes = [ss];
-        
-                this.svg.appendChild(ss);
-                */
     }
 
     add_to_selection(obj) {
@@ -455,32 +445,6 @@ export class canvas_view {
             e.stopPropagation();
         }
 
-        /*
-        obj_shape.onmousedown = e => {
-            this.select_object( obj );
-
-            this.selection_shapes.forEach( i=>{
-                i.onmousemove = e=>{
-                    this.start_move( e.offsetX, e.offsetY, obj );
-                }
-
-                i.onmouseup = e=>{
-                   i.onmousemove = null;
-                }
-            })
-
-            if (this.handlers.onselectobject) {
-                this.handlers.onselectobject(obj);
-            }
-
-            obj_shape.onmouseup = e=>{
-                obj_shape.onmouseup = null;
-                obj_shape.onmousemove = null;
-            }
-
-            e.stopPropagation();
-        }
-        */
         this.object_shapes.push(obj_shape);
         this.svg.appendChild(obj_shape);
     }
